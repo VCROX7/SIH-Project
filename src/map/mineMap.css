@@ -1,0 +1,826 @@
+/* =====================================================================
+   SIH26024 — Mine Digital Twin Map Styles (Enterprise Light CAD / GIS)
+   FILE: src/map/mineMap.css
+   PURPOSE: Technical, clean underground spatial visualization
+   ===================================================================== */
+
+/* ---------- Page layout ---------- */
+#map-page {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 120px);
+  min-height: 620px;
+  gap: 0;
+  border-radius: 8px;
+  box-shadow: var(--shadow-sm);
+  background: #ffffff;
+  border: 1px solid var(--border-subtle);
+}
+
+/* ---------- Map header bar ---------- */
+.mdt-header {
+  background: #ffffff;
+  border-bottom: 1px solid var(--border-subtle);
+  border-radius: 8px 8px 0 0;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.mdt-header-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.mdt-title-group h2 {
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 2px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mdt-title-group p {
+  font-size: 11.5px;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.mdt-sim-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--color-warn-bg);
+  border: 1px solid var(--color-warn-border);
+  border-radius: 4px;
+  padding: 3px 8px;
+  font-size: 10px;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--color-warn-text);
+  letter-spacing: 0.5px;
+}
+
+.mdt-sim-badge .blink-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-warn);
+}
+
+.mdt-stats {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.mdt-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+}
+
+.mdt-stat-val {
+  font-family: var(--font-mono);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--text-primary);
+}
+
+.mdt-stat-val.red   { color: var(--color-critical); }
+.mdt-stat-val.amber { color: var(--color-warn); }
+.mdt-stat-val.green { color: var(--color-safe); }
+
+.mdt-stat-lbl {
+  font-size: 9.5px;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.mdt-header-right {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.mdt-emergency-btn {
+  background: #ffffff;
+  color: var(--color-critical);
+  border: 1px solid var(--color-critical-border);
+  border-radius: 6px;
+  padding: 7px 13px;
+  font-size: 11.5px;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all var(--duration-fast);
+}
+
+.mdt-emergency-btn:hover {
+  background: var(--color-critical-bg);
+}
+
+.mdt-emergency-btn.active {
+  background: var(--color-critical);
+  color: #ffffff;
+  box-shadow: 0 0 0 3px var(--color-critical-border);
+}
+
+.mdt-sim-toggle {
+  background: #ffffff;
+  border: 1px solid var(--border-medium);
+  border-radius: 6px;
+  padding: 7px 12px;
+  font-size: 11.5px;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-brand);
+  transition: all var(--duration-fast);
+}
+
+.mdt-sim-toggle:hover { background: var(--bg-secondary); }
+.mdt-sim-toggle.paused { color: var(--color-warn); border-color: var(--color-warn-border); }
+
+/* ---------- Toolbar (search + filters + layers) ---------- */
+.mdt-toolbar {
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+}
+
+.mdt-search-wrap {
+  position: relative;
+  flex: 0 0 210px;
+}
+
+.mdt-search {
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid var(--border-medium);
+  border-radius: 5px;
+  padding: 6px 10px 6px 28px;
+  font-size: 11.5px;
+  font-family: var(--font-mono);
+  outline: none;
+  color: var(--text-primary);
+  transition: border-color var(--duration-fast);
+}
+
+.mdt-search:focus { border-color: var(--color-brand); }
+
+.mdt-search-icon {
+  position: absolute;
+  left: 9px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 11px;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.mdt-search-results {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: #ffffff;
+  border: 1px solid var(--border-medium);
+  border-radius: 6px;
+  max-height: 180px;
+  overflow-y: auto;
+  z-index: 200;
+  display: none;
+  box-shadow: var(--shadow-lg);
+}
+
+.mdt-search-results.visible { display: block; }
+
+.mdt-search-item {
+  padding: 8px 12px;
+  font-size: 11.5px;
+  font-family: var(--font-mono);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.mdt-search-item:last-child { border-bottom: none; }
+.mdt-search-item:hover { background: var(--bg-secondary); }
+
+.mdt-search-item-id   { font-weight: bold; min-width: 70px; color: var(--color-brand); }
+.mdt-search-item-name { color: var(--text-secondary); }
+
+.mdt-filter-sep {
+  width: 1px;
+  height: 20px;
+  background: var(--border-medium);
+}
+
+.mdt-filter-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.mdt-filter-label {
+  font-size: 9.5px;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.mdt-filter-select {
+  background: #ffffff;
+  border: 1px solid var(--border-medium);
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 11px;
+  font-family: var(--font-mono);
+  color: var(--text-primary);
+  cursor: pointer;
+  outline: none;
+}
+
+.mdt-filter-select:focus { border-color: var(--color-brand); }
+
+/* Layer toggles */
+.mdt-layers {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.mdt-layer-btn {
+  padding: 3px 9px;
+  border-radius: 12px;
+  font-size: 9.5px;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px solid var(--border-medium);
+  background: #ffffff;
+  color: var(--text-muted);
+  transition: all 0.15s;
+}
+
+.mdt-layer-btn.on {
+  background: var(--color-brand-light);
+  border-color: var(--color-brand-border);
+  color: var(--color-brand);
+}
+
+/* ---------- Main map area ---------- */
+.mdt-main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  border-radius: 0 0 8px 8px;
+  overflow: hidden;
+}
+
+/* ---------- SVG canvas (Light CAD Blueprint Grid) ---------- */
+.mdt-canvas-wrap {
+  flex: 1;
+  position: relative;
+  background: #f8fafc;
+  overflow: hidden;
+  cursor: grab;
+}
+
+.mdt-canvas-wrap:active { cursor: grabbing; }
+
+#mdt-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  user-select: none;
+}
+
+/* SVG element styles */
+.mdt-grid-line { stroke: #e2e8f0; stroke-width: 1; }
+.mdt-tunnel    { stroke: #334155; stroke-width: 14; stroke-linecap: round; fill: none; cursor: pointer; transition: stroke 0.2s; }
+.mdt-tunnel:hover     { stroke: #1e293b; }
+.mdt-tunnel.high-risk { stroke: #dc2626; }
+.mdt-tunnel.high-risk:hover { stroke: #b91c1c; }
+.mdt-tunnel.medium-risk { stroke: #d97706; }
+.mdt-tunnel.medium-risk:hover { stroke: #b45309; }
+.mdt-tunnel.selected  { stroke: #0284c7; stroke-width: 16; }
+
+.mdt-tunnel-label { fill: #475569; font-size: 10px; font-family: var(--font-mono); pointer-events: none; font-weight: 700; }
+
+.mdt-zone-fill { opacity: 0.35; }
+.mdt-zone-fill.low      { fill: #dcfce7; }
+.mdt-zone-fill.medium   { fill: #fef3c7; }
+.mdt-zone-fill.high     { fill: #fee2e2; }
+.mdt-zone-fill.critical { fill: #fecaca; opacity: 0.5; }
+.mdt-zone-fill.restricted { fill: #f3e8ff; opacity: 0.55; }
+.mdt-zone-fill.emergency  { fill: #e0f2fe; opacity: 0.5; }
+
+.mdt-zone-border {
+  fill: none;
+  stroke-width: 1.5;
+  stroke-dasharray: 6 4;
+  opacity: 0.8;
+}
+.mdt-zone-border.low       { stroke: #16a34a; }
+.mdt-zone-border.medium    { stroke: #d97706; }
+.mdt-zone-border.high      { stroke: #dc2626; }
+.mdt-zone-border.critical  { stroke: #b91c1c; }
+.mdt-zone-border.restricted{ stroke: #9333ea; }
+.mdt-zone-border.emergency { stroke: #0284c7; }
+
+.mdt-zone-label { fill: #1e293b; font-size: 10px; font-weight: 700; font-family: var(--font-mono); letter-spacing: 0.8px; text-transform: uppercase; pointer-events: none; }
+
+/* Risk score badges on zones */
+.mdt-risk-badge { fill: #ffffff; stroke: var(--border-medium); stroke-width: 1; rx: 4; }
+.mdt-risk-text  { fill: var(--text-primary); font-size: 9.5px; font-family: var(--font-mono); pointer-events: none; font-weight: 700; }
+.mdt-risk-text.high     { fill: var(--color-critical); }
+.mdt-risk-text.medium   { fill: var(--color-warn); }
+.mdt-risk-text.low      { fill: var(--color-safe); }
+
+/* Worker markers with smooth motion */
+.mdt-worker {
+  cursor: pointer;
+  transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.mdt-worker-body {
+  fill: #0284c7;
+  stroke: #ffffff;
+  stroke-width: 2;
+  r: 7.5;
+  transition: r 0.15s;
+}
+
+.mdt-worker-body.warning { fill: #d97706; }
+.mdt-worker-body.critical { fill: #dc2626; }
+.mdt-worker:hover .mdt-worker-body { r: 9.5; stroke-width: 2.5; }
+
+.mdt-worker-label {
+  fill: #0f172a;
+  font-size: 8px;
+  font-family: var(--font-mono);
+  text-anchor: middle;
+  pointer-events: none;
+  font-weight: 700;
+}
+
+/* Equipment markers */
+.mdt-equip {
+  cursor: pointer;
+}
+.mdt-equip-body {
+  fill: #d97706;
+  stroke: #ffffff;
+  stroke-width: 2;
+  rx: 3;
+  width: 13; height: 13;
+}
+.mdt-equip-body.degraded { fill: var(--color-critical); }
+.mdt-equip-label {
+  fill: #0f172a;
+  font-size: 8px;
+  font-family: var(--font-mono);
+  text-anchor: middle;
+  pointer-events: none;
+  font-weight: 700;
+}
+
+/* Sensor markers */
+.mdt-sensor {
+  cursor: pointer;
+}
+.mdt-sensor-body {
+  fill: #0f766e;
+  stroke: #ffffff;
+  stroke-width: 2;
+}
+.mdt-sensor-body.warning  { fill: #d97706; }
+.mdt-sensor-body.critical { fill: #dc2626; animation: mdt-pulse-critical 1s ease-in-out infinite; }
+.mdt-sensor-body.offline  { fill: #94a3b8; }
+
+@keyframes mdt-pulse-critical {
+  0%, 100% { r: 6; opacity: 1; }
+  50%       { r: 10; opacity: 0.6; }
+}
+
+.mdt-sensor-label {
+  fill: #0f172a;
+  font-size: 8px;
+  font-family: var(--font-mono);
+  text-anchor: middle;
+  pointer-events: none;
+  font-weight: 700;
+}
+
+/* Incident markers */
+.mdt-incident {
+  cursor: pointer;
+}
+.mdt-incident-body { fill: var(--color-critical); stroke: #ffffff; stroke-width: 2; }
+.mdt-incident-body.medium { fill: var(--color-warn); }
+.mdt-incident-body.resolved { fill: var(--color-safe); }
+.mdt-incident-label { fill: #ffffff; font-size: 8px; font-family: var(--font-mono); text-anchor: middle; font-weight: bold; pointer-events: none; }
+
+/* Inspection markers */
+.mdt-inspect-body { fill: #7c3aed; stroke: #ffffff; stroke-width: 2; }
+.mdt-inspect-label { fill: #ffffff; font-size: 7.5px; font-family: var(--font-mono); text-anchor: middle; pointer-events: none; font-weight: bold; }
+
+/* Emergency / special markers */
+.mdt-shaft-marker  { fill: #f8fafc; stroke: #16a34a; stroke-width: 2.5; }
+.mdt-shaft-label   { fill: #166534; font-size: 9px; font-family: var(--font-mono); font-weight: bold; text-anchor: middle; pointer-events: none; }
+
+.mdt-exit-marker   { fill: #f0f9ff; stroke: #0284c7; stroke-width: 2.5; rx: 3; }
+.mdt-exit-label    { fill: #075985; font-size: 8.5px; font-family: var(--font-mono); text-anchor: middle; pointer-events: none; font-weight: bold; }
+
+.mdt-refuge-marker { fill: #faf5ff; stroke: #9333ea; stroke-width: 2.5; rx: 3; }
+.mdt-refuge-label  { fill: #6b21a8; font-size: 8.5px; font-family: var(--font-mono); text-anchor: middle; pointer-events: none; font-weight: bold; }
+
+/* Emergency overlay */
+.mdt-emergency-overlay {
+  fill: rgba(220, 38, 38, 0.06);
+  stroke: var(--color-critical);
+  stroke-width: 2;
+  stroke-dasharray: 8 4;
+  animation: mdt-dash-anim 1s linear infinite;
+  display: none;
+}
+
+@keyframes mdt-dash-anim {
+  to { stroke-dashoffset: -24; }
+}
+
+.mdt-emergency-overlay.visible { display: block; }
+
+/* Map legend */
+.mdt-legend {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid var(--border-medium);
+  border-radius: 6px;
+  padding: 10px 14px;
+  pointer-events: none;
+  box-shadow: var(--shadow-sm);
+}
+
+.mdt-legend-title {
+  font-size: 9px;
+  font-family: var(--font-mono);
+  color: var(--color-brand);
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  margin-bottom: 7px;
+}
+
+.mdt-legend-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 4px;
+  font-size: 10.5px;
+  font-family: var(--font-mono);
+  color: var(--text-secondary);
+}
+
+.mdt-legend-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.mdt-legend-sq {
+  width: 8px; height: 8px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+/* Zoom controls */
+.mdt-zoom-controls {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mdt-zoom-btn {
+  width: 30px; height: 30px;
+  background: #ffffff;
+  border: 1px solid var(--border-medium);
+  border-radius: 5px;
+  color: var(--text-primary);
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--duration-fast);
+}
+
+.mdt-zoom-btn:hover { background: var(--bg-secondary); color: var(--color-brand); border-color: var(--color-brand); }
+
+/* ---------- Sliding Light Detail Drawer with Spring Motion ---------- */
+.mdt-detail-panel {
+  width: 0;
+  background: #ffffff;
+  border-left: 1px solid var(--border-subtle);
+  overflow: hidden;
+  transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.mdt-detail-panel.open {
+  width: 310px;
+}
+
+.mdt-detail-inner {
+  width: 310px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow-y: auto;
+  animation: tabContentOpen 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mdt-detail-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 8px;
+}
+
+.mdt-detail-close {
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: var(--text-muted);
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+}
+
+.mdt-detail-close:hover { color: var(--text-primary); }
+
+.mdt-detail-id {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.mdt-detail-type {
+  font-size: 9px;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+.mdt-detail-status-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.mdt-detail-section {
+  margin-bottom: 12px;
+}
+
+.mdt-detail-section-title {
+  font-size: 9.5px;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--color-brand);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 6px;
+}
+
+.mdt-detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 5px 0;
+  border-bottom: 1px solid var(--border-subtle);
+  font-size: 12px;
+}
+
+.mdt-detail-row:last-child { border-bottom: none; }
+
+.mdt-detail-key { color: var(--text-muted); font-family: var(--font-mono); font-size: 11px; }
+.mdt-detail-val { font-weight: 600; text-align: right; max-width: 160px; color: var(--text-primary); font-family: var(--font-mono); }
+.mdt-detail-val.red   { color: var(--color-critical); }
+.mdt-detail-val.amber { color: var(--color-warn); }
+.mdt-detail-val.green { color: var(--color-safe); }
+
+.mdt-detail-sim-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--color-warn-bg);
+  border: 1px solid var(--color-warn-border);
+  border-radius: 4px;
+  padding: 3px 8px;
+  font-size: 9.5px;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--color-warn-text);
+  margin-top: 8px;
+}
+
+.mdt-detail-actions {
+  margin-top: auto;
+  padding-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mdt-detail-action-btn {
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 5px;
+  font-size: 11.5px;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px solid var(--border-medium);
+  background: #ffffff;
+  color: var(--text-primary);
+  text-align: center;
+  transition: all var(--duration-fast);
+}
+
+.mdt-detail-action-btn:hover { background: var(--bg-secondary); }
+.mdt-detail-action-btn.primary {
+  background: var(--color-brand);
+  color: #ffffff;
+  border-color: var(--color-brand);
+}
+.mdt-detail-action-btn.primary:hover { background: var(--color-brand-hover); }
+
+/* Emergency panel in light mode */
+.mdt-emergency-panel {
+  background: var(--color-critical-bg);
+  border-left: 1px solid var(--color-critical-border);
+  width: 0;
+  overflow: hidden;
+  transition: width 0.3s var(--ease-out);
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.mdt-emergency-panel.open {
+  width: 290px;
+}
+
+.mdt-emergency-inner {
+  width: 290px;
+  padding: 18px;
+  color: var(--color-critical-text);
+  overflow-y: auto;
+}
+
+.mdt-emergency-inner h3 {
+  color: var(--color-critical);
+  font-family: var(--font-heading);
+  font-size: 14px;
+  margin: 0 0 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.mdt-emergency-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(220, 38, 38, 0.15);
+  font-size: 11.5px;
+  font-family: var(--font-mono);
+}
+
+.mdt-emergency-row .key { color: var(--text-muted); }
+.mdt-emergency-row .val { color: var(--color-critical); font-weight: bold; text-align: right; }
+
+.mdt-emergency-workers {
+  background: #ffffff;
+  border: 1px solid var(--color-critical-border);
+  border-radius: 6px;
+  padding: 8px 10px;
+  margin-top: 10px;
+}
+
+.mdt-emergency-workers h4 {
+  font-size: 9.5px;
+  font-family: var(--font-mono);
+  color: var(--color-critical);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 6px;
+}
+
+.mdt-emergency-worker-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+  font-size: 11px;
+  font-family: var(--font-mono);
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.mdt-emergency-worker-item:last-child { border-bottom: none; }
+
+.mdt-emergency-dismiss {
+  width: 100%;
+  margin-top: 14px;
+  padding: 8px;
+  background: var(--color-critical);
+  border: 1px solid var(--color-critical);
+  border-radius: 5px;
+  color: #ffffff;
+  font-size: 11.5px;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  cursor: pointer;
+  transition: background var(--duration-fast);
+}
+
+.mdt-emergency-dismiss:hover { background: #991b1b; }
+
+/* Demo scenarios toolbar */
+.demo-scenarios {
+  padding: 10px 14px;
+  background: #ffffff;
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 900px) {
+  .mdt-detail-panel.open,
+  .mdt-emergency-panel.open {
+    width: 250px;
+  }
+  .mdt-detail-inner,
+  .mdt-emergency-inner {
+    width: 250px;
+  }
+  .mdt-stats { display: none; }
+  .mdt-layers { display: none; }
+  #map-page { height: auto; min-height: 520px; }
+  .mdt-main { height: 520px; }
+}

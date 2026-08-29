@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SIH26024 Automated Test Suite</title>
+  <style>
+    body { font-family: monospace; background: #0f172a; color: #f8fafc; padding: 24px; }
+    h1 { border-bottom: 1px solid #334155; padding-bottom: 10px; color: #38bdf8; }
+    .pass { color: #4ade80; }
+    .fail { color: #f87171; font-weight: bold; }
+    .suite { margin-top: 20px; font-weight: bold; color: #60a5fa; }
+    .summary { margin-top: 30px; font-size: 1.2em; padding: 12px; background: #1e293b; border-radius: 6px; }
+  </style>
+</head>
+<body>
+
+<h1>CoalGov Automated Test Suite</h1>
+<div id="output"></div>
+
+<!-- Load application dependencies -->
+<script src="../src/auth/authService.js"></script>
+<script src="../src/geofence/geofenceEngine.js"></script>
+<script src="../src/alerts/alertSystem.js"></script>
+<script src="../src/risk/anomalyEngine.js"></script>
+<script src="../src/risk/riskEngine.js"></script>
+<script src="../src/services/caseService.js"></script>
+<script src="../src/services/inspectionService.js"></script>
+<script src="../src/services/evidenceService.js"></script>
+<script src="../src/audit/auditService.js"></script>
+
+<!-- Load Test Suite -->
+<script src="testSuite.js"></script>
+<script>
+  window.onload = function() {
+    runAllTests();
+  };
+</script>
+
+</body>
+</html>

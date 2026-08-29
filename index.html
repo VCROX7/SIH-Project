@@ -1,0 +1,1630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CoalGov — Industrial Coal Mine Safety &amp; Compliance Command Center</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="src/map/mineMap.css">
+</head>
+<body>
+
+<!-- =====================================================================
+     VIEW 1: ENTERPRISE AUTHENTICATION / LOGIN VIEW
+     ===================================================================== -->
+<div id="auth-view">
+  <div class="login-container">
+    
+    <!-- Left: Branding & Technical Mine-Network Motion Graphic -->
+    <div class="login-visual-panel">
+      <div class="login-brand-header">
+        <div class="login-logo">
+          <div class="login-logo-mark">C</div>
+          <div>
+            <div class="login-logo-title">CoalGov</div>
+            <div class="login-logo-subtitle">SMART GOVERNANCE OS</div>
+          </div>
+        </div>
+        <p style="color: #94a3b8; font-size: 13px; margin: 12px 0 0; line-height: 1.5;">
+          AI-Powered Compliance Monitoring, Multi-Factor Risk Forensics &amp; Spatial Digital Twin for Underground Coal Mines.
+        </p>
+      </div>
+
+      <!-- Abstract Mine-Network Diagram -->
+      <div class="login-graphic-wrap">
+        <svg class="mine-network-svg" viewBox="0 0 320 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Underground Tunnel Vectors -->
+          <path d="M 40 80 L 100 80 L 140 40 L 220 40 L 260 80 L 280 80" class="network-line" />
+          <path d="M 100 80 L 140 120 L 220 120 L 260 80" class="network-line" />
+          <path d="M 140 40 L 140 120" class="network-line" style="opacity: 0.4;" />
+          <path d="M 220 40 L 220 120" class="network-line" style="opacity: 0.4;" />
+
+          <!-- Network Sensor / Gateway Nodes -->
+          <circle cx="40" cy="80" r="5" class="network-node" />
+          <circle cx="100" cy="80" r="6" class="network-node pulse" />
+          <circle cx="140" cy="40" r="5" class="network-node" />
+          <circle cx="220" cy="40" r="5" class="network-node" />
+          <circle cx="260" cy="80" r="6" class="network-node pulse" />
+          <circle cx="280" cy="80" r="5" class="network-node" />
+          <circle cx="140" cy="120" r="5" class="network-node" />
+          <circle cx="220" cy="120" r="5" class="network-node" />
+
+          <!-- Moving Telemetry Packet Signal -->
+          <circle cx="60" cy="80" r="3.5" class="network-signal" />
+
+          <!-- Node Labels -->
+          <text x="40" y="98" fill="#64748b" font-size="8" font-family="monospace" text-anchor="middle">SHAFT-1</text>
+          <text x="140" y="30" fill="#64748b" font-size="8" font-family="monospace" text-anchor="middle">PANEL-A</text>
+          <text x="220" y="30" fill="#64748b" font-size="8" font-family="monospace" text-anchor="middle">PANEL-B</text>
+          <text x="140" y="136" fill="#64748b" font-size="8" font-family="monospace" text-anchor="middle">VENT-S4</text>
+          <text x="220" y="136" fill="#64748b" font-size="8" font-family="monospace" text-anchor="middle">REFUGE</text>
+          <text x="280" y="98" fill="#64748b" font-size="8" font-family="monospace" text-anchor="middle">RETURN</text>
+        </svg>
+      </div>
+
+      <div class="login-visual-footer">
+        <div><strong>Standard Operating Protocol:</strong> CMR 2017 &amp; DGMS Statutory Compliance</div>
+        <div style="color: #64748b; font-size: 10.5px; margin-top: 4px;">Smart India Hackathon 2026 · Problem SIH26024</div>
+      </div>
+    </div>
+
+    <!-- Right: Authentication Form Panel -->
+    <div class="login-form-panel">
+      <div class="login-form-header">
+        <h2>Sign In to CoalGov</h2>
+        <p>Enter your institutional credentials to access command portal</p>
+      </div>
+
+      <form class="login-form" id="loginForm" onsubmit="handleLoginSubmit(event)">
+        <!-- Inline Error Banner -->
+        <div class="form-error-msg" id="login-error-msg"></div>
+
+        <div class="form-group">
+          <label for="loginEmail">Institutional Email</label>
+          <input type="email" id="loginEmail" class="form-input" placeholder="officer@coalgov.in" autocomplete="email" required>
+        </div>
+
+        <div class="form-group">
+          <label for="loginPassword">Security Password</label>
+          <input type="password" id="loginPassword" class="form-input" placeholder="••••••••" autocomplete="current-password" required>
+        </div>
+
+        <div class="form-options">
+          <label class="remember-me">
+            <input type="checkbox" id="rememberMe" checked>
+            <span>Remember operator session</span>
+          </label>
+          <a class="forgot-link" onclick="toast('Password recovery reset link dispatched to registered mining unit administrator.')">Forgot password?</a>
+        </div>
+
+        <button type="submit" class="btn-sign-in" id="btnLoginSubmit">
+          <span id="btnSignInText">Sign In to Portal</span>
+        </button>
+      </form>
+
+      <!-- Evaluator / Judge Demo Quick-Selector -->
+      <div class="demo-accounts-box">
+        <div class="demo-accounts-title">
+          <span>Demo Operator Profiles</span>
+          <span style="font-weight: normal; color: var(--color-brand); cursor: pointer;" onclick="quickLogin('officer@coalgov.in', 'demo123')">Quick Sign-In</span>
+        </div>
+        <div class="demo-chips">
+          <button type="button" class="demo-chip" onclick="quickFill('officer@coalgov.in', 'demo123')">Safety Officer</button>
+          <button type="button" class="demo-chip" onclick="quickFill('manager@coalgov.in', 'demo123')">Colliery GM</button>
+          <button type="button" class="demo-chip" onclick="quickFill('auditor@coalgov.in', 'demo123')">DGMS Auditor</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- =====================================================================
+     VIEW 2: MAIN COMMAND CENTER APPLICATION VIEW
+     ===================================================================== -->
+<div id="app-view">
+  <div class="app">
+
+    <!-- =====================================================================
+         OPERATIONAL COMMAND SIDEBAR
+         ===================================================================== -->
+    <aside class="sidebar" id="appSidebar">
+      <div class="logo">
+        <div class="logo-mark">C</div>
+        <div class="logo-info">
+          <div style="letter-spacing: -0.5px;">CoalGov</div>
+          <div class="tag">SAFETY &amp; COMPLIANCE OS</div>
+        </div>
+      </div>
+
+      <div class="nav-title" id="navGroupTelemetry" data-en="Tactical Telemetry" data-hi="टेलीमेट्री एवं अवलोकन">Tactical Telemetry</div>
+      <nav class="nav">
+        <button class="active" data-page="dashboard" onclick="showPage('dashboard', this)">
+          <span class="nav-icon">▪</span>
+          <span class="nav-label" data-en="Executive Overview" data-hi="डैशबोर्ड अवलोकन">Executive Overview</span>
+        </button>
+        <button data-page="map" onclick="showPage('map', this)">
+          <span class="nav-icon">⊙</span>
+          <span class="nav-label" data-en="Mine Command Center" data-hi="खदान डिजिटल नक्शा">Mine Command Center</span>
+        </button>
+        <button data-page="sensors" onclick="showPage('sensors', this)">
+          <span class="nav-icon">●</span>
+          <span class="nav-label" data-en="Live IoT Sensors" data-hi="लाइव सेंसर निगरानी">Live IoT Sensors</span>
+        </button>
+        <button data-page="ai" onclick="showPage('ai', this)">
+          <span class="nav-icon">◆</span>
+          <span class="nav-label" data-en="Risk Intelligence" data-hi="जोखिम विश्लेषण">Risk Intelligence</span>
+        </button>
+
+        <div class="nav-title" id="navGroupGovernance" data-en="Governance &amp; Actions" data-hi="कार्य एवं नियम">Governance &amp; Actions</div>
+        <button data-page="alerts" onclick="showPage('alerts', this)">
+          <span class="nav-icon">⚠</span>
+          <span class="nav-label" data-en="Alert Center" data-hi="अलर्ट केंद्र">Alert Center</span>
+        </button>
+        <button data-page="cases" onclick="showPage('cases', this)">
+          <span class="nav-icon">◫</span>
+          <span class="nav-label" data-en="Case Workspace &amp; SLA" data-hi="मामले सुलझाएं">Case Workspace &amp; SLA</span>
+        </button>
+        <button data-page="inspection" onclick="showPage('inspection', this)">
+          <span class="nav-icon">+</span>
+          <span class="nav-label" data-en="Field Inspection" data-hi="नया फील्ड निरीक्षण">Field Inspection</span>
+        </button>
+        <button data-page="evidence" onclick="showPage('evidence', this)">
+          <span class="nav-icon">🔒</span>
+          <span class="nav-label" data-en="Evidence Verification" data-hi="साक्ष्य सत्यापन">Evidence Verification</span>
+        </button>
+        <button data-page="audit" onclick="showPage('audit', this)">
+          <span class="nav-icon">⏱</span>
+          <span class="nav-label" data-en="Audit Trail" data-hi="ऑडिट ट्रेल">Audit Trail</span>
+        </button>
+        <button data-page="accountability" onclick="showPage('accountability', this)">
+          <span class="nav-icon">◎</span>
+          <span class="nav-label" data-en="Department Scores" data-hi="विभाग स्कोर">Department Scores</span>
+        </button>
+        <button data-page="reports" onclick="showPage('reports', this)">
+          <span class="nav-icon">≡</span>
+          <span class="nav-label" data-en="Statutory Reports" data-hi="सुरक्षा रिपोर्ट">Statutory Reports</span>
+        </button>
+      </nav>
+
+      <!-- Operational Operator Profile + Sign Out -->
+      <div class="user">
+        <div style="display:flex; align-items:center; gap:10px; overflow:hidden;">
+          <div class="avatar" id="userAvatar">RK</div>
+          <div class="user-details" style="overflow:hidden; white-space:nowrap;">
+            <b style="font-size: 12.5px; color: var(--text-primary);" id="userName">Raj Kumar</b><br>
+            <small style="color: var(--text-muted); font-family: var(--font-mono); font-size: 10px;" id="userTitle">Mine Safety Officer · Shift A</small><br>
+            <span id="userRoleBadge" class="pill low" style="margin-top:3px; font-size:9px; padding:1px 6px;">FIELD SAFETY ACCESS</span>
+          </div>
+        </div>
+        <button class="btn-sign-out" title="Sign Out" onclick="handleSignOut()">
+          <span style="font-size:16px;">⎋</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- =====================================================================
+         MAIN COMMAND WORKSPACE
+         ===================================================================== -->
+    <main>
+      <!-- Top Command Bar -->
+      <header class="top">
+        <div class="top-left">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <button class="sidebar-toggle-btn" id="btnToggleSidebar" onclick="toggleSidebar()" title="Toggle Sidebar">«</button>
+            <div>
+              <h1 id="title">Tactical Mine Command Overview</h1>
+              <p id="subtitle">Operational safety telemetry, hazard state, and compliance index · 29 August 2026</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <div class="live-clock-pill">
+            <span class="pulse-dot"></span>
+            <span id="liveClock">LIVE · 15:30:00 IST</span>
+          </div>
+
+          <!-- Danger Simulation Mode Toggle -->
+          <button class="btn warning btn-sm" id="btnDangerMode" onclick="setDangerMode(!isDangerMode)">
+            <span>⚡ Sim Anomaly</span>
+          </button>
+
+          <!-- P0 Demo Sequence Runner Shortcut -->
+          <button class="btn btn-sm" id="btnP0Demo" onclick="P0Demo.nextStep()" title="Advance P0 Demonstration Step">
+            <span>▶ P0 Demo</span>
+          </button>
+
+          <!-- Offline Synchronization Pill -->
+          <button class="btn btn-sm" id="btnSync" onclick="syncOfflineData()">
+            <span id="syncText">Sync Offline (3)</span>
+          </button>
+
+          <!-- Hindi / English Language Switcher -->
+          <button class="btn btn-sm" id="btnLang" onclick="toggleLanguage()">
+            हिंदी / HI
+          </button>
+
+          <!-- Role Switcher -->
+          <select class="role-select" id="roleSelector" onchange="changeRole(this.value)">
+            <option value="officer">Officer: Raj Kumar</option>
+            <option value="manager">GM: Dr. A. K. Mishra</option>
+            <option value="auditor">Auditor: S. N. Sengupta</option>
+          </select>
+        </div>
+      </header>
+
+      <!-- =====================================================================
+           PAGE 1: EXECUTIVE OVERVIEW (DASHBOARD)
+           ===================================================================== -->
+      <section id="dashboard" class="page active">
+        <!-- Top Operational Status Banner -->
+        <div class="banner" id="overviewStatusBanner">
+          <div>
+            <div class="pill low" id="overviewStatusPill">STATUS: OPERATIONAL · ELEVATED VIGILANCE</div>
+            <h3 style="margin-top:4px;">Sector 4 Ventilation Duct Watch · Sector 2 PPE Compliance Warning</h3>
+            <span style="font-size:12px; color:var(--text-secondary);">Shift A Underground Workforce: <strong>14 Personnel</strong> · Active Machinery: <strong>3 Units</strong> · Central Coalfields Unit 04</span>
+          </div>
+          <button class="btn primary" onclick="showPage('map')">Open GIS Digital Twin →</button>
+        </div>
+
+        <!-- High-Impact Big Percentage Compliance Ribbon -->
+        <div class="stat-percentage-ribbon">
+          <div class="stat-percent-card highlight">
+            <div class="stat-percent-label">
+              <span>Statutory Compliance</span>
+              <span class="pill low">PASS ✓</span>
+            </div>
+            <div class="stat-percent-num green">
+              94.8<span class="stat-percent-unit">%</span>
+            </div>
+            <div class="stat-percent-desc">Compliant with DGMS &amp; CMR 2017 standards across 6 underground sectors.</div>
+            <div class="stat-percent-bar">
+              <div class="stat-percent-fill green" style="width: 94.8%;"></div>
+            </div>
+          </div>
+
+          <div class="stat-percent-card brand">
+            <div class="stat-percent-label">
+              <span>SLA On-Time Rate</span>
+              <span class="pill low">TARGET 95%</span>
+            </div>
+            <div class="stat-percent-num brand">
+              98.2<span class="stat-percent-unit">%</span>
+            </div>
+            <div class="stat-percent-desc">19 of 20 hazard incidents resolved within statutory timeframe.</div>
+            <div class="stat-percent-bar">
+              <div class="stat-percent-fill" style="width: 98.2%;"></div>
+            </div>
+          </div>
+
+          <div class="stat-percent-card info">
+            <div class="stat-percent-label">
+              <span>Ventilation &amp; Air Quality</span>
+              <span class="pill low">NORMAL</span>
+            </div>
+            <div class="stat-percent-num blue">
+              100<span class="stat-percent-unit">%</span>
+            </div>
+            <div class="stat-percent-desc">CH4, CO, and airflow velocities within safe statutory thresholds.</div>
+            <div class="stat-percent-bar">
+              <div class="stat-percent-fill blue" style="width: 100%;"></div>
+            </div>
+          </div>
+
+          <div class="stat-percent-card warn">
+            <div class="stat-percent-label">
+              <span>Audit Readiness Index</span>
+              <span class="pill medium">DGMS READY</span>
+            </div>
+            <div class="stat-percent-num amber">
+              91.5<span class="stat-percent-unit">%</span>
+            </div>
+            <div class="stat-percent-desc">100% cryptographic SHA-256 evidence proof logged in audit ledger.</div>
+            <div class="stat-percent-bar">
+              <div class="stat-percent-fill amber" style="width: 91.5%;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Easy Quick Actions for New Users -->
+        <div class="easy-guide-banner">
+          <div class="easy-guide-header">
+            <div class="easy-guide-title">
+              <span>🚀</span>
+              <span>Quick Start Navigation — Easy 1-Click Operations</span>
+            </div>
+            <span style="font-size:11px; font-family:var(--font-mono); color:var(--text-muted);">Simple &amp; intuitive command center for any operator</span>
+          </div>
+          <div class="easy-guide-grid">
+            <div class="easy-guide-card" onclick="showPage('map')">
+              <div class="easy-guide-icon">🗺️</div>
+              <div class="easy-guide-text">
+                <h4>1. Mine Command Map</h4>
+                <p>View 2D CAD tunnels &amp; live worker positions</p>
+              </div>
+            </div>
+
+            <div class="easy-guide-card" onclick="showPage('sensors')">
+              <div class="easy-guide-icon">⚡</div>
+              <div class="easy-guide-text">
+                <h4>2. Live IoT Sensors</h4>
+                <p>Monitor real-time gas &amp; airflow streams</p>
+              </div>
+            </div>
+
+            <div class="easy-guide-card" onclick="showPage('cases')">
+              <div class="easy-guide-icon">📋</div>
+              <div class="easy-guide-text">
+                <h4>3. Case Solver &amp; SLA</h4>
+                <p>Review &amp; resolve hazard cases with proof</p>
+              </div>
+            </div>
+
+            <div class="easy-guide-card" onclick="showPage('evidence')">
+              <div class="easy-guide-icon">🔒</div>
+              <div class="easy-guide-text">
+                <h4>4. Evidence Vault</h4>
+                <p>Verify photo proof &amp; SHA-256 hashes</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5-Metric Executive Ribbon -->
+        <div class="cards">
+          <div class="card">
+            <div class="card-label">Mine Operational State</div>
+            <div class="metric" style="color:var(--color-safe); font-size:24px;">ACTIVE</div>
+            <div class="delta"><span class="pulse-dot"></span> 6 Sensors Online</div>
+          </div>
+
+          <div class="card">
+            <div class="card-label">Composite Risk Index</div>
+            <div class="metric" id="dashRiskScore" style="color:var(--color-critical);">42 <span style="font-size:16px; color:var(--text-muted); font-weight:500;">/ 100</span></div>
+            <div class="delta amber">▲ +4 from previous shift</div>
+          </div>
+
+          <div class="card">
+            <div class="card-label">Critical / High Alerts</div>
+            <div class="metric" style="color:var(--color-critical);">1 <span style="font-size:16px; color:var(--text-muted); font-weight:500;">Active</span></div>
+            <div class="delta red">● Vent Speed 2.8 m/s</div>
+          </div>
+
+          <div class="card">
+            <div class="card-label">Open Compliance Cases</div>
+            <div class="metric" id="dashOpenCasesCount">4</div>
+            <div class="delta">2 in progress · 1 review</div>
+          </div>
+
+          <div class="card">
+            <div class="card-label">Overdue Statutory SLA</div>
+            <div class="metric" id="dashOverdueCount" style="color:var(--color-warn);">1</div>
+            <div class="delta red">Case #2048 &gt; 4h SLA</div>
+          </div>
+        </div>
+
+        <!-- Main Operational Grid: Left (Charts & Sectors) | Right (Alerts & Activity) -->
+        <div class="grid">
+          <div class="panel">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+              <h3>Monthly Safety &amp; Statutory Compliance Trend</h3>
+              <span class="pill low">TARGET 90%</span>
+            </div>
+            <div class="sub">30-day compliance score vs statutory CMR 2017 baseline</div>
+            <div class="chart">
+              <div class="bar" style="height: 60%;"><span>MAY (78%)</span></div>
+              <div class="bar" style="height: 72%;"><span>JUN (82%)</span></div>
+              <div class="bar" style="height: 85%;"><span>JUL (88%)</span></div>
+              <div class="bar" style="height: 94%; background: var(--color-safe);"><span>AUG (94%)</span></div>
+            </div>
+
+            <!-- Sector Status Matrix -->
+            <div style="margin-top: 26px;">
+              <h4 style="font-family:var(--font-heading); margin:0 0 4px; font-size:14px;">Underground Sector Operational State</h4>
+              <div class="sector-matrix-grid">
+                <div class="sector-card">
+                  <div class="sector-header">
+                    <span class="sector-name">Main Haulage Road</span>
+                    <span class="pill low">LOW 18</span>
+                  </div>
+                  <div class="sector-metrics">
+                    <span>Workers: 5</span>
+                    <span>Air: 3.4 m/s</span>
+                  </div>
+                </div>
+
+                <div class="sector-card">
+                  <div class="sector-header">
+                    <span class="sector-name">Panel A (Face)</span>
+                    <span class="pill low">LOW 21</span>
+                  </div>
+                  <div class="sector-metrics">
+                    <span>Workers: 2</span>
+                    <span>CH4: 0.36%</span>
+                  </div>
+                </div>
+
+                <div class="sector-card" style="border-color:var(--color-critical-border); background:var(--color-critical-bg);">
+                  <div class="sector-header">
+                    <span class="sector-name" style="color:var(--color-critical);">Panel B (Face)</span>
+                    <span class="pill high">HIGH 87</span>
+                  </div>
+                  <div class="sector-metrics">
+                    <span style="color:var(--color-critical); font-weight:bold;">Workers: 8</span>
+                    <span style="color:var(--color-critical);">CH4: 0.42% ↑</span>
+                  </div>
+                </div>
+
+                <div class="sector-card">
+                  <div class="sector-header">
+                    <span class="sector-name">Panel C (Face)</span>
+                    <span class="pill medium">MED 42</span>
+                  </div>
+                  <div class="sector-metrics">
+                    <span>Workers: 3</span>
+                    <span>CH4: 0.39%</span>
+                  </div>
+                </div>
+
+                <div class="sector-card" style="border-color:var(--color-warn-border); background:var(--color-warn-bg);">
+                  <div class="sector-header">
+                    <span class="sector-name">Vent Duct S4</span>
+                    <span class="pill high">HIGH 75</span>
+                  </div>
+                  <div class="sector-metrics">
+                    <span>Fan Motor: ⚠</span>
+                    <span>Air: 2.8 m/s</span>
+                  </div>
+                </div>
+
+                <div class="sector-card" style="border-color:var(--color-critical-border);">
+                  <div class="sector-header">
+                    <span class="sector-name">Restricted Yard</span>
+                    <span class="pill critical">CRIT 94</span>
+                  </div>
+                  <div class="sector-metrics">
+                    <span>Access: LOCKED</span>
+                    <span>Geofenced</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Priority Alerts & Live Stream -->
+          <div class="panel">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+              <h3>Priority Safety Alerts</h3>
+              <button class="btn btn-sm" onclick="showPage('alerts')">View All (4) →</button>
+            </div>
+            <div class="sub">Active statutory warnings requiring shift supervisor triage</div>
+
+            <div class="alert">
+              <div class="dot"></div>
+              <div style="flex:1;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <strong>Ventilation Velocity Degraded</strong>
+                  <span class="pill high">CRITICAL</span>
+                </div>
+                <p>Airflow dropped to 2.8 m/s in Sector 4 (Statutory threshold min 3.0 m/s).</p>
+                <div style="margin-top:6px; display:flex; gap:6px;">
+                  <button class="btn btn-sm" onclick="viewCase('C-2048')">Open Case #2048</button>
+                  <button class="btn btn-sm" onclick="showPage('map')">⊙ Locate</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="alert">
+              <div class="dot warn"></div>
+              <div style="flex:1;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <strong>Repeated Non-Compliance: PPE</strong>
+                  <span class="pill medium">HIGH</span>
+                </div>
+                <p>Contractor team observed without secondary methane cap lamp detector in Panel B.</p>
+                <div style="margin-top:6px;">
+                  <button class="btn btn-sm" onclick="viewCase('C-2047')">Investigate</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="alert">
+              <div class="dot safe"></div>
+              <div style="flex:1;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <strong>Main Shaft CO Sensor Normalized</strong>
+                  <span class="pill low">RESOLVED</span>
+                </div>
+                <p>Carbon Monoxide levels stable at 18 ppm across Shaft 1 telemetry node.</p>
+              </div>
+            </div>
+
+            <div style="margin-top:18px; padding-top:14px; border-top:1px solid var(--border-subtle);">
+              <div style="display:flex; justify-content:space-between; font-size:11px; font-family:var(--font-mono); color:var(--text-muted); margin-bottom:8px;">
+                <span>IMMUTABLE AUDIT FEED</span>
+                <span style="color:var(--color-safe);">● SYNCED</span>
+              </div>
+              <div style="font-family:var(--font-mono); font-size:11.5px; line-height:1.6; color:var(--text-secondary);">
+                <div>[15:22:10] <strong>M-1024</strong> assigned to Case #2048</div>
+                <div>[15:18:45] Geofence boundary evaluated: 0 unauthorized breaches</div>
+                <div>[15:05:00] Shift A compliance audit dossier certified</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =====================================================================
+           PAGE 2: MINE COMMAND CENTER (GIS DIGITAL TWIN MAP)
+           ===================================================================== -->
+      <section id="map" class="page">
+        <div id="map-page">
+          <!-- Header Bar -->
+          <div class="mdt-header">
+            <div class="mdt-header-left">
+              <div class="mdt-title-group">
+                <h2>
+                  Mine Digital Twin — Spatial Command Center
+                  <span class="mdt-sim-badge"><span class="blink-dot"></span> SIMULATION MODE</span>
+                </h2>
+                <p>Interactive spatial CAD map of underground tunnels, workers, equipment, and risk zones</p>
+              </div>
+            </div>
+
+            <div class="mdt-stats">
+              <div class="mdt-stat">
+                <span class="mdt-stat-val" id="mdt-stat-workers">5</span>
+                <span class="mdt-stat-lbl">Active Workers</span>
+              </div>
+              <div class="mdt-stat">
+                <span class="mdt-stat-val" id="mdt-stat-equipment">3</span>
+                <span class="mdt-stat-lbl">Equipment</span>
+              </div>
+              <div class="mdt-stat">
+                <span class="mdt-stat-val" id="mdt-stat-sensors">6</span>
+                <span class="mdt-stat-lbl">Sensors</span>
+              </div>
+              <div class="mdt-stat">
+                <span class="mdt-stat-val amber" id="mdt-stat-risk">HIGH</span>
+                <span class="mdt-stat-lbl">Max Risk</span>
+              </div>
+              <div class="mdt-stat">
+                <span class="mdt-stat-val red" id="mdt-stat-incidents">1</span>
+                <span class="mdt-stat-lbl">Incidents</span>
+              </div>
+            </div>
+
+            <div class="mdt-header-right">
+              <button class="mdt-emergency-btn" id="mdt-emergency-btn" onclick="mdtToggleEmergency()">
+                <span>🚨 EMERGENCY MODE</span>
+              </button>
+              <button class="mdt-sim-toggle" id="mdt-sim-toggle" onclick="mdtToggleSim()">
+                <span>&#9646;&#9646; LIVE SIM</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Toolbar: Search + Risk Filters + Entity Filters -->
+          <div class="mdt-toolbar">
+            <div class="mdt-search-wrap">
+              <span class="mdt-search-icon">🔍</span>
+              <input type="text" class="mdt-search" id="mdt-search" placeholder="Search workers, tunnels, sensors..." oninput="mdtHandleSearch(this.value)" autocomplete="off">
+              <div class="mdt-search-results" id="mdt-search-results"></div>
+            </div>
+
+            <!-- Risk Filter Buttons -->
+            <div class="mdt-filter-group">
+              <span class="mdt-filter-lbl">RISK:</span>
+              <button class="mdt-filter-btn active" data-risk="all" onclick="mdtApplyFilter('risk','all')">ALL</button>
+              <button class="mdt-filter-btn" data-risk="LOW" onclick="mdtApplyFilter('risk','LOW')">LOW</button>
+              <button class="mdt-filter-btn" data-risk="MEDIUM" onclick="mdtApplyFilter('risk','MEDIUM')">MED</button>
+              <button class="mdt-filter-btn" data-risk="HIGH" onclick="mdtApplyFilter('risk','HIGH')">HIGH</button>
+              <button class="mdt-filter-btn" data-risk="CRITICAL" onclick="mdtApplyFilter('risk','CRITICAL')">CRIT</button>
+            </div>
+
+            <!-- Entity Filter Buttons -->
+            <div class="mdt-filter-group">
+              <span class="mdt-filter-lbl">SHOW:</span>
+              <button class="mdt-filter-btn active" data-entity="all" onclick="mdtApplyFilter('entity','all')">ALL</button>
+              <button class="mdt-filter-btn" data-entity="workers" onclick="mdtApplyFilter('entity','workers')">Workers</button>
+              <button class="mdt-filter-btn" data-entity="equipment" onclick="mdtApplyFilter('entity','equipment')">Equipment</button>
+              <button class="mdt-filter-btn" data-entity="sensors" onclick="mdtApplyFilter('entity','sensors')">Sensors</button>
+              <button class="mdt-filter-btn" data-entity="incidents" onclick="mdtApplyFilter('entity','incidents')">Incidents</button>
+            </div>
+
+            <!-- Layer Toggles -->
+            <div class="mdt-layers">
+              <label class="mdt-layer-label"><input type="checkbox" id="layer-tunnels" checked onchange="mdtToggleLayer('tunnels')"> Tunnels</label>
+              <label class="mdt-layer-label"><input type="checkbox" id="layer-zones" checked onchange="mdtToggleLayer('zones')"> Zones</label>
+              <label class="mdt-layer-label"><input type="checkbox" id="layer-workers" checked onchange="mdtToggleLayer('workers')"> Workers</label>
+              <label class="mdt-layer-label"><input type="checkbox" id="layer-equipment" checked onchange="mdtToggleLayer('equipment')"> Equipment</label>
+              <label class="mdt-layer-label"><input type="checkbox" id="layer-sensors" checked onchange="mdtToggleLayer('sensors')"> Sensors</label>
+              <label class="mdt-layer-label"><input type="checkbox" id="layer-risk" checked onchange="mdtToggleLayer('risk')"> Risk Heatmap</label>
+            </div>
+
+            <!-- Zoom controls -->
+            <div class="mdt-zoom-controls">
+              <button class="mdt-zoom-btn" onclick="mdtZoomIn()" title="Zoom in">+</button>
+              <button class="mdt-zoom-btn" onclick="mdtZoomOut()" title="Zoom out">−</button>
+              <button class="mdt-zoom-btn" onclick="mdtResetView()" title="Reset view">⊙</button>
+            </div>
+          </div>
+
+          <!-- Main SVG Map & Context Panel Area -->
+          <div class="mdt-main">
+            <!-- SVG Mine Canvas -->
+            <div class="mdt-canvas-wrap" id="mdt-canvas-wrap">
+              <svg id="mdt-svg" class="mdt-svg" viewBox="0 0 1000 680" preserveAspectRatio="xMidYMid meet">
+                <defs>
+                  <pattern id="mdt-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#e2e8f0" stroke-width="0.8" />
+                  </pattern>
+                  <pattern id="mdt-restricted-pat" width="16" height="16" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
+                    <line x1="0" y1="0" x2="0" y2="16" stroke="rgba(220,38,38,0.25)" stroke-width="3" />
+                  </pattern>
+                </defs>
+
+                <!-- Blueprint grid background -->
+                <rect width="1000" height="680" fill="url(#mdt-grid)" />
+
+                <!-- Transform group for Pan & Zoom -->
+                <g id="mdt-g-transform">
+                  <g id="mdt-g-zones"></g>
+                  <g id="mdt-g-risk-overlays"></g>
+                  <g id="mdt-g-tunnels"></g>
+                  <g id="mdt-g-infrastructure"></g>
+                  <g id="mdt-g-sensors"></g>
+                  <g id="mdt-g-equipment"></g>
+                  <g id="mdt-g-workers"></g>
+                  <g id="mdt-g-incidents"></g>
+                  <g id="mdt-g-inspections"></g>
+                  <g id="mdt-g-labels"></g>
+                  <g id="mdt-g-emergency-overlay"></g>
+                </g>
+              </svg>
+
+              <!-- Map Legend -->
+              <div class="mdt-legend">
+                <div class="mdt-legend-title">MAP LEGEND</div>
+                <div class="mdt-legend-item"><span class="mdt-leg-dot" style="background:#15803d;"></span> Low Risk (&lt;30)</div>
+                <div class="mdt-legend-item"><span class="mdt-leg-dot" style="background:#b45309;"></span> Medium Risk (30-60)</div>
+                <div class="mdt-legend-item"><span class="mdt-leg-dot" style="background:#c2410c;"></span> High Risk (60-80)</div>
+                <div class="mdt-legend-item"><span class="mdt-leg-dot" style="background:#b91c1c;"></span> Critical Risk (&gt;80)</div>
+                <div class="mdt-legend-item"><span class="mdt-leg-dot" style="background:#0f766e;"></span> Worker / Inspector</div>
+                <div class="mdt-legend-item"><span class="mdt-leg-dot" style="background:#0284c7;"></span> IoT Sensor Node</div>
+              </div>
+            </div>
+
+            <!-- Slide-Over Entity Detail Panel -->
+            <div class="mdt-detail-panel" id="mdt-detail-panel">
+              <div class="mdt-detail-inner" id="mdt-detail-inner">
+                <!-- Dynamically populated by mdtBuildDetailHTML() -->
+              </div>
+            </div>
+
+            <!-- Emergency Evacuation Mode Panel -->
+            <div class="mdt-emergency-panel" id="mdt-emergency-panel">
+              <div class="mdt-emergency-inner" id="mdt-emergency-inner">
+                <!-- Dynamically populated by mdtBuildEmergencyHTML() -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Evaluation Demo Scenarios Toolbar -->
+          <div class="demo-scenarios">
+            <span style="font-size:11px; font-family:var(--font-mono); color:var(--text-muted); font-weight:700;">DEMO SCENARIOS:</span>
+            <button class="btn btn-sm" onclick="runDemoScenario('ENTER_RESTRICTED')">Simulate Restricted Entry</button>
+            <button class="btn btn-sm" onclick="runDemoScenario('EXIT_RESTRICTED')">Simulate Safe Exit</button>
+            <button class="btn btn-sm" onclick="runDemoScenario('RE_ENTER_RESTRICTED')">Simulate Repeated Violation</button>
+            <button class="btn btn-sm danger" onclick="runDemoScenario('EMERGENCY')">Trigger Evacuation Alert</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- =====================================================================
+           PAGE 3: LIVE IOT SENSOR STREAM
+           ===================================================================== -->
+      <section id="sensors" class="page">
+        <div class="sensor-top">
+          <div>
+            <h2 class="section-title">Live IoT Sensor Telemetry Stream</h2>
+            <div class="section-desc">Underground multi-gas, ventilation velocity, and strata convergence readings (2.5s drift interval)</div>
+          </div>
+          <div style="display:flex; gap:8px;">
+            <button class="btn btn-sm" onclick="setDangerMode(false)">Restore Normal Telemetry</button>
+            <button class="btn btn-sm warning" onclick="setDangerMode(true)">⚡ Simulate Danger Surge</button>
+          </div>
+        </div>
+
+        <!-- Sensor Cards Grid with Sparkline Trends -->
+        <div class="sensor-grid">
+          <!-- Sensor 1: Methane -->
+          <div class="sensor-card" id="card-ch4">
+            <div>
+              <div class="sensor-header">
+                <div>
+                  <div class="sensor-name">Methane Gas (CH4)</div>
+                  <div class="sensor-loc">SECTOR 4 · WORKING FACE PANEL B</div>
+                </div>
+                <span class="pill low" id="pill-ch4">NORMAL</span>
+              </div>
+              <div class="sensor-metric">
+                <span class="sensor-val" id="val-ch4">0.42</span>
+                <span class="sensor-unit">% VOL</span>
+              </div>
+              <div class="sensor-sparkline">
+                <div class="spark-bar" style="height:30%;"></div>
+                <div class="spark-bar" style="height:35%;"></div>
+                <div class="spark-bar" style="height:42%;"></div>
+                <div class="spark-bar" style="height:40%;"></div>
+                <div class="spark-bar" style="height:48%;"></div>
+                <div class="spark-bar" style="height:55%;"></div>
+                <div class="spark-bar" style="height:62%;"></div>
+              </div>
+            </div>
+            <div class="sensor-footer">
+              <span>Safe Max: <strong>0.75%</strong></span>
+              <button class="btn btn-sm" onclick="showPage('map'); mdtHighlightEntity('SN-001', 'zone-panel-b');">⊙ Map</button>
+            </div>
+          </div>
+
+          <!-- Sensor 2: Carbon Monoxide -->
+          <div class="sensor-card" id="card-co">
+            <div>
+              <div class="sensor-header">
+                <div>
+                  <div class="sensor-name">Carbon Monoxide (CO)</div>
+                  <div class="sensor-loc">MAIN RETURN AIRWAY · SHAFT 1</div>
+                </div>
+                <span class="pill low" id="pill-co">NORMAL</span>
+              </div>
+              <div class="sensor-metric">
+                <span class="sensor-val" id="val-co">18</span>
+                <span class="sensor-unit">PPM</span>
+              </div>
+              <div class="sensor-sparkline">
+                <div class="spark-bar" style="height:25%;"></div>
+                <div class="spark-bar" style="height:28%;"></div>
+                <div class="spark-bar" style="height:30%;"></div>
+                <div class="spark-bar" style="height:28%;"></div>
+                <div class="spark-bar" style="height:32%;"></div>
+                <div class="spark-bar" style="height:30%;"></div>
+                <div class="spark-bar" style="height:29%;"></div>
+              </div>
+            </div>
+            <div class="sensor-footer">
+              <span>Safe Max: <strong>50 PPM</strong></span>
+              <button class="btn btn-sm" onclick="showPage('map'); mdtHighlightEntity('SN-002', 'zone-main-tunnel');">⊙ Map</button>
+            </div>
+          </div>
+
+          <!-- Sensor 3: Oxygen -->
+          <div class="sensor-card" id="card-o2">
+            <div>
+              <div class="sensor-header">
+                <div>
+                  <div class="sensor-name">Oxygen Level (O2)</div>
+                  <div class="sensor-loc">SECTOR 2 · HAULAGE ROADWAY</div>
+                </div>
+                <span class="pill low" id="pill-o2">NORMAL</span>
+              </div>
+              <div class="sensor-metric">
+                <span class="sensor-val" id="val-o2">20.4</span>
+                <span class="sensor-unit">% VOL</span>
+              </div>
+              <div class="sensor-sparkline">
+                <div class="spark-bar" style="height:80%;"></div>
+                <div class="spark-bar" style="height:82%;"></div>
+                <div class="spark-bar" style="height:80%;"></div>
+                <div class="spark-bar" style="height:81%;"></div>
+                <div class="spark-bar" style="height:83%;"></div>
+                <div class="spark-bar" style="height:82%;"></div>
+                <div class="spark-bar" style="height:80%;"></div>
+              </div>
+            </div>
+            <div class="sensor-footer">
+              <span>Safe Min: <strong>19.0%</strong></span>
+              <button class="btn btn-sm" onclick="showPage('map'); mdtHighlightEntity('SN-003', 'zone-panel-a');">⊙ Map</button>
+            </div>
+          </div>
+
+          <!-- Sensor 4: Airflow Velocity -->
+          <div class="sensor-card danger" id="card-airflow">
+            <div>
+              <div class="sensor-header">
+                <div>
+                  <div class="sensor-name">Airflow Velocity</div>
+                  <div class="sensor-loc">VENTILATION DUCT 4 · RETURN AIR</div>
+                </div>
+                <span class="pill high" id="pill-airflow">DANGER · LOW</span>
+              </div>
+              <div class="sensor-metric">
+                <span class="sensor-val" id="val-airflow">2.8</span>
+                <span class="sensor-unit">M/S</span>
+              </div>
+              <div class="sensor-sparkline">
+                <div class="spark-bar" style="height:70%;"></div>
+                <div class="spark-bar" style="height:65%;"></div>
+                <div class="spark-bar" style="height:55%;"></div>
+                <div class="spark-bar" style="height:48%;"></div>
+                <div class="spark-bar" style="height:40%;"></div>
+                <div class="spark-bar" style="height:35%;"></div>
+                <div class="spark-bar" style="height:28%;"></div>
+              </div>
+            </div>
+            <div class="sensor-footer">
+              <span>Statutory Min: <strong>3.0 m/s</strong></span>
+              <button class="btn btn-sm" onclick="showPage('map'); mdtHighlightEntity('SN-004', 'zone-vent');">⊙ Map</button>
+            </div>
+          </div>
+
+          <!-- Sensor 5: Temperature -->
+          <div class="sensor-card" id="card-temp">
+            <div>
+              <div class="sensor-header">
+                <div>
+                  <div class="sensor-name">Ambient Temperature</div>
+                  <div class="sensor-loc">PANEL C · DEEP DRIFT ROADWAY</div>
+                </div>
+                <span class="pill low" id="pill-temp">NORMAL</span>
+              </div>
+              <div class="sensor-metric">
+                <span class="sensor-val" id="val-temp">34</span>
+                <span class="sensor-unit">°C</span>
+              </div>
+              <div class="sensor-sparkline">
+                <div class="spark-bar" style="height:50%;"></div>
+                <div class="spark-bar" style="height:52%;"></div>
+                <div class="spark-bar" style="height:54%;"></div>
+                <div class="spark-bar" style="height:53%;"></div>
+                <div class="spark-bar" style="height:55%;"></div>
+                <div class="spark-bar" style="height:54%;"></div>
+                <div class="spark-bar" style="height:56%;"></div>
+              </div>
+            </div>
+            <div class="sensor-footer">
+              <span>Safe Max: <strong>38°C</strong></span>
+              <button class="btn btn-sm" onclick="showPage('map'); mdtHighlightEntity('SN-005', 'zone-panel-c');">⊙ Map</button>
+            </div>
+          </div>
+
+          <!-- Sensor 6: Strata Roof Movement -->
+          <div class="sensor-card" id="card-roof">
+            <div>
+              <div class="sensor-header">
+                <div>
+                  <div class="sensor-name">Roof Convergence</div>
+                  <div class="sensor-loc">JUNCTION J-02 · PANEL B ACCESS</div>
+                </div>
+                <span class="pill medium" id="pill-roof">WARNING</span>
+              </div>
+              <div class="sensor-metric">
+                <span class="sensor-val" id="val-roof">12</span>
+                <span class="sensor-unit">MM</span>
+              </div>
+              <div class="sensor-sparkline">
+                <div class="spark-bar" style="height:20%;"></div>
+                <div class="spark-bar" style="height:25%;"></div>
+                <div class="spark-bar" style="height:35%;"></div>
+                <div class="spark-bar" style="height:45%;"></div>
+                <div class="spark-bar" style="height:55%;"></div>
+                <div class="spark-bar" style="height:60%;"></div>
+                <div class="spark-bar" style="height:68%;"></div>
+              </div>
+            </div>
+            <div class="sensor-footer">
+              <span>Safe Max: <strong>10 mm</strong></span>
+              <button class="btn btn-sm" onclick="showPage('map'); mdtHighlightEntity('SN-006', 'zone-panel-b');">⊙ Map</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =====================================================================
+           PAGE 4: RISK INTELLIGENCE & FORENSIC CALCULATOR
+           ===================================================================== -->
+      <section id="ai" class="page">
+        <h2 class="section-title">Risk Synthesis &amp; Recurrence Forensic Engine</h2>
+        <div class="section-desc">Multi-factor hazard scoring, anomaly factor synthesis, and false-closure integrity audits</div>
+
+        <div class="risk-overview-grid">
+          <!-- Left: Large Risk Gauge & Status -->
+          <div class="score-box">
+            <div>
+              <div class="card-label">Current Composite Risk Index</div>
+              <div class="score" id="riskScore">42 <span style="font-size:20px; color:var(--text-muted); font-weight:500;">/ 100</span></div>
+              <div class="pill high" style="margin-bottom:8px;">HAZARD LEVEL: ELEVATED · SECTOR 4</div>
+              <p style="color:var(--text-secondary); font-size:12.5px; margin:0;">
+                Autonomous risk evaluation synthesized across 6 telemetry streams, 2 geofence boundaries, and 1 statutory SLA delay.
+              </p>
+            </div>
+            <button class="btn primary" style="margin-top:16px;" onclick="showPage('cases')">View Mitigation Pipeline →</button>
+          </div>
+
+          <!-- Right: Quantitative Factor Synthesis Calculation -->
+          <div class="calc-box">
+            <h4 style="font-family:var(--font-heading); margin:0 0 10px; font-size:13.5px;">What is Causing the Risk? (Factor Breakdown)</h4>
+            <div class="calc-row">
+              <span>Airflow drop in Ventilation Duct 4 (2.8 m/s vs min 3.0 m/s)</span>
+              <span class="calc-val red">+25 pts</span>
+            </div>
+            <div class="calc-row">
+              <span>Methane rising trend in Panel B (0.42% VOL)</span>
+              <span class="calc-val red">+15 pts</span>
+            </div>
+            <div class="calc-row">
+              <span>Roof strata convergence exceeding 10mm baseline (12mm)</span>
+              <span class="calc-val red">+10 pts</span>
+            </div>
+            <div class="calc-row">
+              <span>Overdue Statutory SLA on Case #2048 (&gt; 4 hours)</span>
+              <span class="calc-val red">+12 pts</span>
+            </div>
+            <div class="calc-row">
+              <span>Baseline environmental safety credit</span>
+              <span class="calc-val green">-20 pts</span>
+            </div>
+            <div class="calc-divider"></div>
+            <div class="calc-row" style="font-weight:700; font-size:13px;">
+              <span>Total Synthesized Risk Index</span>
+              <span class="calc-val red" style="font-size:15px;">42 / 100 (ELEVATED)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Prescriptive CMR 2017 & DGMS Actions -->
+        <div class="panel" style="margin-bottom: 20px;">
+          <h3>Statutory Prescriptive Actions (CMR 2017 Compliance)</h3>
+          <div class="sub">Deterministic corrective steps generated for Shift Supervisor &amp; Ventilation Engineer</div>
+          <div class="risk-actions-grid">
+            <div class="risk-action-card">
+              <div class="risk-action-num">1</div>
+              <div>
+                <strong style="color:var(--text-primary); font-size:13px;">Deploy Auxiliary Booster Fan in Sector 4</strong>
+                <p style="margin:4px 0 0; color:var(--text-secondary); font-size:12px;">Ventilation duct velocity must be restored above statutory 3.0 m/s threshold before personnel re-entry.</p>
+              </div>
+            </div>
+
+            <div class="risk-action-card">
+              <div class="risk-action-num">2</div>
+              <div>
+                <strong style="color:var(--text-primary); font-size:13px;">Install Supplementary Hydraulic Roof Props at J-02</strong>
+                <p style="margin:4px 0 0; color:var(--text-secondary); font-size:12px;">Arrest 12mm strata roof convergence in Panel B haulage approach.</p>
+              </div>
+            </div>
+
+            <div class="risk-action-card">
+              <div class="risk-action-num">3</div>
+              <div>
+                <strong style="color:var(--text-primary); font-size:13px;">Conduct Shift Forensics on Repeated PPE Violations</strong>
+                <p style="margin:4px 0 0; color:var(--text-secondary); font-size:12px;">Audit Contractor C-88 team records for missing secondary multi-gas detector loggers.</p>
+              </div>
+            </div>
+
+            <div class="risk-action-card">
+              <div class="risk-action-num">4</div>
+              <div>
+                <strong style="color:var(--text-primary); font-size:13px;">Acknowledge Level 3 DGMS SLA Escalation Notice</strong>
+                <p style="margin:4px 0 0; color:var(--text-secondary); font-size:12px;">Transmit verified photo evidence and normalized gas re-test readings to Colliery GM.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recurrence Forensics & False Closure Audit -->
+        <div class="grid">
+          <div class="panel">
+            <h3>Repeated Problem Detection</h3>
+            <div class="sub">Identifies recurring safety defects at identical spatial coordinates</div>
+            <div class="pill high" style="margin-bottom: 10px;">4 RECURRENCES · SECTOR 4 DUCT</div>
+            <div class="timeline-list">
+              <div class="timeline-item">
+                <span class="timeline-date">10 AUG</span>
+                <span>Ventilation motor belt slipping · Resolved in 45m</span>
+              </div>
+              <div class="timeline-item">
+                <span class="timeline-date">18 AUG</span>
+                <span>Air velocity dropped to 2.9 m/s · Resolved in 1h 10m</span>
+              </div>
+              <div class="timeline-item">
+                <span class="timeline-date">24 AUG</span>
+                <span>Auxiliary duct tear in Panel B cross-cut · Resolved in 2h</span>
+              </div>
+              <div class="timeline-item" style="background:var(--color-critical-bg); border-left:3px solid var(--color-critical); padding:6px 10px;">
+                <span class="timeline-date" style="color:var(--color-critical);">TODAY</span>
+                <span style="font-weight:600; color:var(--color-critical-text);">Airflow velocity 2.8 m/s (Active Case #2048)</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <h3>False Closure Integrity Audit</h3>
+            <div class="sub">Forensic detection of prematurely closed cases without physical evidence</div>
+            <div class="pill low" style="margin-bottom: 10px;">INTEGRITY INDEX: 96.8%</div>
+            <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.7; font-family: var(--font-mono);">
+              <div>✓ Case #2031: Photo hash verified (SHA-256 matched)</div>
+              <div>✓ Case #2039: Sensor re-test passed (CH4 0.32%)</div>
+              <div>⚠ Case #2044: Flagged for secondary DGMS review (Rapid closure &lt; 8m)</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =====================================================================
+           PAGE 5: ALERT CENTER
+           ==================================================================== -->
+      <section id="alerts" class="page">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:12px;">
+          <div>
+            <h2 class="section-title">Safety Alert Center</h2>
+            <div class="section-desc">Classified operational and geofence alerts stream with instant triage &amp; case escalation</div>
+          </div>
+          <div style="display:flex; gap:8px;">
+            <button class="btn btn-sm" onclick="AlertSystem.generateEvent({ eventType: 'TEST_ALERT', severity: 'HIGH', entityId: 'SN-001', zoneId: 'zone-panel-b', description: 'Simulated Methane spike test' }); renderAlertCenter();">
+              + Generate Test Alert
+            </button>
+          </div>
+        </div>
+
+        <!-- Alert Filter Tabs -->
+        <div class="alerts-tabs">
+          <button class="btn btn-sm primary" id="tab-alerts-NEW" onclick="renderAlertCenter('NEW')">Active / New Alerts</button>
+          <button class="btn btn-sm" id="tab-alerts-ACKNOWLEDGED" onclick="renderAlertCenter('ACKNOWLEDGED')">Acknowledged</button>
+          <button class="btn btn-sm" id="tab-alerts-RESOLVED" onclick="renderAlertCenter('RESOLVED')">Resolved</button>
+          <button class="btn btn-sm" id="tab-alerts-ALL" onclick="renderAlertCenter('ALL')">All Classifications</button>
+        </div>
+
+        <div class="panel" style="padding:0; overflow:hidden;">
+          <table class="table">
+            <thead>
+              <tr>
+                <th style="width: 100px;">Severity</th>
+                <th>Alert Title &amp; Details</th>
+                <th>Entity ID</th>
+                <th>Zone Location</th>
+                <th>Timestamp</th>
+                <th>Status</th>
+                <th style="width: 220px;">Operational Actions</th>
+              </tr>
+            </thead>
+            <tbody id="alertsTableBody">
+              <!-- Dynamically rendered by renderAlertCenter() -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- =====================================================================
+           PAGE 6: CASE WORKSPACE & STATUTORY SLA LIFECYCLE (UPGRADED DYNAMIC)
+           ===================================================================== -->
+      <section id="cases" class="page">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px;">
+          <div>
+            <h2 class="section-title" style="margin:0 0 2px;">Hazard Resolution &amp; Statutory SLA Pipeline</h2>
+            <div class="section-desc" style="margin:0;">End-to-end master-detail case solver from autonomous anomaly detection to verified closure</div>
+          </div>
+          <button class="btn btn-sm primary" onclick="promptCreateNewCase()">+ Open New Case</button>
+        </div>
+
+        <!-- 3-Pane Master-Detail Case Workspace -->
+        <div class="case-workspace-layout">
+          <!-- Pane 1: Dynamic Case List Registry -->
+          <div class="case-sidebar-list">
+            <div class="case-list-header">
+              <div class="case-list-header-top">
+                <span>Case Registry</span>
+                <span class="pill low" id="caseRegistryCountPill">4 Cases</span>
+              </div>
+              <input type="text" class="case-filter-input" id="caseSearchInput" placeholder="Filter by ID, zone, keyword..." oninput="handleCaseSearch(this.value)">
+              <div class="case-filter-pills">
+                <button class="case-filter-pill active" data-filter="ALL" onclick="filterCaseList('ALL')">ALL</button>
+                <button class="case-filter-pill" data-filter="OPEN" onclick="filterCaseList('OPEN')">OPEN</button>
+                <button class="case-filter-pill" data-filter="IN_PROGRESS" onclick="filterCaseList('IN_PROGRESS')">IN PROG</button>
+                <button class="case-filter-pill" data-filter="ESCALATED" onclick="filterCaseList('ESCALATED')">ESCALATED</button>
+                <button class="case-filter-pill" data-filter="RESOLVED" onclick="filterCaseList('RESOLVED')">RESOLVED</button>
+              </div>
+            </div>
+            <div class="case-list-items" id="caseListContainer">
+              <!-- Dynamically populated by renderCaseList() -->
+            </div>
+          </div>
+
+          <!-- Pane 2: Case Details Workspace -->
+          <div class="case-detail-pane" id="caseDetailContainer">
+            <!-- Dynamically populated by renderActiveCaseWorkspace() -->
+          </div>
+
+          <!-- Pane 3: 8-Stage Lifecycle Stepper & SLA Matrix -->
+          <div class="case-lifecycle-pane" id="caseLifecycleContainer">
+            <!-- Dynamically populated by renderActiveCaseLifecycle() -->
+          </div>
+        </div>
+
+        <!-- Registry Table View -->
+        <div class="panel" style="margin-top: 20px; padding:0; overflow:hidden;">
+          <div style="padding:12px 16px; background:var(--bg-secondary); border-bottom:1px solid var(--border-subtle); display:flex; justify-content:space-between; align-items:center;">
+            <b style="font-size:12px; font-family:var(--font-mono); color:var(--text-muted); text-transform:uppercase;">Complete Statutory Case Registry</b>
+            <span style="font-size:11px; font-family:var(--font-mono); color:var(--text-secondary);">Click "View Case" on any row to open in workspace</span>
+          </div>
+          <table class="table">
+            <thead>
+              <tr>
+                <th style="width: 90px;">Case ID</th>
+                <th>Hazard Title &amp; Findings</th>
+                <th>Zone ID</th>
+                <th>Assigned Officer</th>
+                <th>Statutory SLA</th>
+                <th>Status</th>
+                <th style="width: 160px;">Action</th>
+              </tr>
+            </thead>
+            <tbody id="casesTableBody">
+              <!-- Dynamically populated by renderCases() -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- =====================================================================
+           PAGE 7: FIELD INSPECTION (6-STEP FIELD OFFICER WORKFLOW)
+           ===================================================================== -->
+      <section id="inspection" class="page">
+        <h2 class="section-title">Field Inspection Dossier (Offline-First)</h2>
+        <div class="section-desc">Geo-tagged field observation recording with local storage queue and sensor validation</div>
+
+        <!-- Offline Status Banner -->
+        <div class="sync-banner">
+          <div>
+            <strong>📍 OFFLINE-READY UNDERGROUND MODE:</strong> Inspections are securely queued in local browser vault and auto-synchronized upon surface Wi-Fi reconnection.
+          </div>
+          <button class="btn btn-sm" style="background:#fff;" onclick="syncOfflineData()">Sync Local Vault (3)</button>
+        </div>
+
+        <div class="field-wizard-container">
+          <!-- 6-Step Header Tabs -->
+          <div class="wizard-steps-header">
+            <div class="wizard-step-tab active" id="wizTab1" onclick="setWizardStep(1)">
+              <div class="step-num-bubble">1</div>
+              <span>1. Location</span>
+            </div>
+            <div class="wizard-step-tab" id="wizTab2" onclick="setWizardStep(2)">
+              <div class="step-num-bubble">2</div>
+              <span>2. Checklist</span>
+            </div>
+            <div class="wizard-step-tab" id="wizTab3" onclick="setWizardStep(3)">
+              <div class="step-num-bubble">3</div>
+              <span>3. Findings</span>
+            </div>
+            <div class="wizard-step-tab" id="wizTab4" onclick="setWizardStep(4)">
+              <div class="step-num-bubble">4</div>
+              <span>4. Evidence</span>
+            </div>
+            <div class="wizard-step-tab" id="wizTab5" onclick="setWizardStep(5)">
+              <div class="step-num-bubble">5</div>
+              <span>5. Review</span>
+            </div>
+            <div class="wizard-step-tab" id="wizTab6" onclick="setWizardStep(6)">
+              <div class="step-num-bubble">6</div>
+              <span>6. Submit</span>
+            </div>
+          </div>
+
+          <!-- Wizard Step 1: Location & Coordinates -->
+          <div class="wizard-content-step active" id="wizStep1">
+            <h3 style="margin:0 0 6px; font-size:16px;">Step 1: Inspection Location &amp; Geo-Tagging</h3>
+            <p style="color:var(--text-muted); font-size:12px; margin-bottom:18px;">Select underground mine sector and verify spatial coordinates</p>
+
+            <div class="field">
+              <label for="inspectLocation">Mine Zone / Working Face</label>
+              <select id="inspectLocation">
+                <option value="Ventilation Duct 4">Sector 4 — Ventilation Duct &amp; Fan Motor</option>
+                <option value="Panel B Working Face">Sector 4 — Panel B Working Face</option>
+                <option value="Panel A Access Road">Sector 2 — Panel A Haulage Road</option>
+                <option value="Main Return Airway">Sector 1 — Main Return Airway (Shaft 1)</option>
+                <option value="Equipment Storage Yard">Underground Maintenance &amp; Equipment Yard</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label>Simulated Geotag Coordinates</label>
+              <input type="text" value="X=480m, Y=490m, Z=-220m (Underground Grid S4)" readonly style="background:var(--bg-secondary); font-family:var(--font-mono);">
+            </div>
+          </div>
+
+          <!-- Wizard Step 2: Safety Checklist -->
+          <div class="wizard-content-step" id="wizStep2">
+            <h3 style="margin:0 0 6px; font-size:16px;">Step 2: Statutory Safety Checklist (CMR 2017)</h3>
+            <p style="color:var(--text-muted); font-size:12px; margin-bottom:18px;">Check all compliant safety items observed in the field</p>
+
+            <div class="checks">
+              <label class="check"><input type="checkbox" checked> <span>Ventilation velocity &gt; 3.0 m/s verified</span></label>
+              <label class="check"><input type="checkbox" checked> <span>Methane gas &lt; 0.75% across working face</span></label>
+              <label class="check"><input type="checkbox" checked> <span>Strata roof support &amp; rockbolts sound</span></label>
+              <label class="check"><input type="checkbox"> <span>Water drainage sump pumps active</span></label>
+              <label class="check"><input type="checkbox"> <span>All personnel wearing calibrated cap lamps</span></label>
+              <label class="check"><input type="checkbox" checked> <span>Flameproof electrical boxes sealed</span></label>
+            </div>
+          </div>
+
+          <!-- Wizard Step 3: Observations & Findings -->
+          <div class="wizard-content-step" id="wizStep3">
+            <h3 style="margin:0 0 6px; font-size:16px;">Step 3: Field Findings &amp; Hazard Severity</h3>
+            <p style="color:var(--text-muted); font-size:12px; margin-bottom:18px;">Describe defects, mechanical deviations, or compliance breaches</p>
+
+            <div class="field">
+              <label for="inspectSeverity">Hazard Severity Classification</label>
+              <select id="inspectSeverity">
+                <option value="MEDIUM">MEDIUM RISK (Standard statutory SLA 4h)</option>
+                <option value="HIGH">HIGH RISK (Immediate 2h supervisory alert)</option>
+                <option value="CRITICAL">CRITICAL RISK (Emergency evacuation protocol)</option>
+                <option value="LOW">LOW RISK (Routine maintenance observation)</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="inspectNotes">Detailed Observation Notes</label>
+              <textarea id="inspectNotes" rows="4" placeholder="Enter physical inspection notes, observed anomalies, and recommended remediation..."></textarea>
+            </div>
+          </div>
+
+          <!-- Wizard Step 4: Evidence Attachment -->
+          <div class="wizard-content-step" id="wizStep4">
+            <h3 style="margin:0 0 6px; font-size:16px;">Step 4: Evidence Capture &amp; Cryptographic Hash</h3>
+            <p style="color:var(--text-muted); font-size:12px; margin-bottom:18px;">Upload digital camera photo proof or field sensor measurement log</p>
+
+            <div style="border:2px dashed var(--border-medium); padding:30px; text-align:center; border-radius:8px; background:var(--bg-secondary); margin-bottom:14px;">
+              <div style="font-size:28px; margin-bottom:6px;">📷</div>
+              <strong style="color:var(--text-primary);">Simulated Field Photo Attached</strong>
+              <div style="font-size:11px; font-family:var(--font-mono); color:var(--text-muted); margin-top:4px;">
+                VENT_DUCT_REPAIR_PROOF_20260829.JPG (2.4 MB)
+              </div>
+              <div class="evidence-hash-tag" style="max-width:380px; margin:10px auto 0;">
+                SHA-256: 0x8f19bc32e54a9d7c014bb891e23f
+              </div>
+            </div>
+          </div>
+
+          <!-- Wizard Step 5: Review Dossier -->
+          <div class="wizard-content-step" id="wizStep5">
+            <h3 style="margin:0 0 6px; font-size:16px;">Step 5: Review Inspection Dossier</h3>
+            <p style="color:var(--text-muted); font-size:12px; margin-bottom:18px;">Verify recorded telemetry before committing to local vault</p>
+
+            <div style="background:var(--bg-secondary); border:1px solid var(--border-subtle); padding:16px; border-radius:6px; font-family:var(--font-mono); font-size:12px; line-height:1.8;">
+              <div><strong>Inspector:</strong> Raj Kumar (Safety Officer · M-1024)</div>
+              <div><strong>Location:</strong> Sector 4 Ventilation Duct (X=480, Y=490)</div>
+              <div><strong>Timestamp:</strong> 29 August 2026, 15:30 IST</div>
+              <div><strong>Status:</strong> QUEUED_FOR_OFFLINE_SYNC</div>
+              <div><strong>Cryptographic Hash:</strong> 0x8f19bc32e54a9d7c014bb891e23f</div>
+            </div>
+          </div>
+
+          <!-- Wizard Step 6: Confirmation & Submit -->
+          <div class="wizard-content-step" id="wizStep6">
+            <div style="text-align:center; padding:20px 10px;">
+              <div style="font-size:36px; color:var(--color-safe); margin-bottom:10px;">✓</div>
+              <h3 style="margin:0 0 8px; font-size:18px;">Ready for Local Storage Vault Commit</h3>
+              <p style="color:var(--text-secondary); font-size:13px; max-width:440px; margin:0 auto 20px;">
+                The inspection will be immediately recorded in your offline local queue and linked to the statutory audit trail.
+              </p>
+              <button class="btn primary" style="padding:10px 24px; font-size:13.5px;" onclick="submitInspection()">
+                Submit Field Inspection Dossier
+              </button>
+            </div>
+          </div>
+
+          <!-- Wizard Navigation Bar -->
+          <div class="wizard-actions-bar" id="wizardNavButtons">
+            <button class="btn btn-sm" id="btnWizPrev" onclick="prevWizardStep()">← Previous Step</button>
+            <button class="btn btn-sm primary" id="btnWizNext" onclick="nextWizardStep()">Next Step →</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- =====================================================================
+           PAGE 8: EVIDENCE VERIFICATION WORKSPACE
+           ===================================================================== -->
+      <section id="evidence" class="page">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:12px;">
+          <div>
+            <h2 class="section-title">Cryptographic Evidence Verification Workspace</h2>
+            <div class="section-desc">Tamper-evident photo proof vault with SHA-256 hash checks, geotag integrity, and duplicate detection</div>
+          </div>
+          <button class="btn btn-sm primary" onclick="toast('✓ Cryptographic integrity check passed: 100% hashes verified against DGMS gateway')">
+            Verify All Hashes (SHA-256)
+          </button>
+        </div>
+
+        <!-- Evidence Cards Grid -->
+        <div class="evidence-grid" id="evidenceVaultGrid">
+          <!-- Populated dynamically by renderEvidenceVault() -->
+        </div>
+      </section>
+
+      <!-- =====================================================================
+           PAGE 9: IMMUTABLE AUDIT TRAIL
+           ===================================================================== -->
+      <section id="audit" class="page">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:12px;">
+          <div>
+            <h2 class="section-title">Immutable Audit Trail (DGMS Regulatory Log)</h2>
+            <div class="section-desc">Permanent, tamper-evident chronological event log tracking every anomaly, case transition, and inspection</div>
+          </div>
+          <div class="pill low">TAMPER-EVIDENT LEDGER ACTIVE ✓</div>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="audit-controls-bar">
+          <input type="text" class="field" placeholder="Search by Case ID, Actor, or Event Type..." style="max-width:320px; padding:7px 12px; font-size:12px; margin:0;" oninput="filterAuditTrail(this.value)">
+          <button class="btn btn-sm active" onclick="filterAuditCategory('ALL')">All Events</button>
+          <button class="btn btn-sm" onclick="filterAuditCategory('CASE')">Case Events</button>
+          <button class="btn btn-sm" onclick="filterAuditCategory('GEOFENCE')">Geofence Events</button>
+          <button class="btn btn-sm" onclick="filterAuditCategory('INSPECTION')">Inspection Events</button>
+        </div>
+
+        <!-- Audit Timeline Feed -->
+        <div class="audit-timeline-feed" id="auditFullTimeline">
+          <!-- Dynamically populated by renderAuditTrail() -->
+        </div>
+      </section>
+
+      <!-- =====================================================================
+           PAGE 10: DEPARTMENT SCORES & RULES COMPLIANCE
+           ===================================================================== -->
+      <section id="accountability" class="page">
+        <h2 class="section-title">Department Scores &amp; Rules Compliance</h2>
+        <div class="section-desc">Performance metrics tracking on-time resolution and Coal Mines Regulations (CMR) 2017 checks</div>
+
+        <!-- 3 Department Performance Stat Cards with Big Percentages -->
+        <div class="stat-percentage-ribbon" style="grid-template-columns: repeat(3, 1fr);">
+          <div class="stat-percent-card highlight">
+            <div class="stat-percent-label">
+              <span>Safety Inspection Division</span>
+              <span class="pill low">GRADE A+</span>
+            </div>
+            <div class="stat-percent-num green">
+              91.0<span class="stat-percent-unit">%</span>
+            </div>
+            <div class="stat-percent-desc">Top compliant division with 0 SLA breaches and 100% photo proof validation.</div>
+            <div class="stat-percent-bar">
+              <div class="stat-percent-fill green" style="width: 91%;"></div>
+            </div>
+          </div>
+
+          <div class="stat-percent-card brand">
+            <div class="stat-percent-label">
+              <span>Electrical &amp; Mechanical Team</span>
+              <span class="pill low">GRADE B</span>
+            </div>
+            <div class="stat-percent-num brand">
+              84.0<span class="stat-percent-unit">%</span>
+            </div>
+            <div class="stat-percent-desc">1 pending equipment maintenance audit in North Haulage tunnel.</div>
+            <div class="stat-percent-bar">
+              <div class="stat-percent-fill" style="width: 84%;"></div>
+            </div>
+          </div>
+
+          <div class="stat-percent-card warn">
+            <div class="stat-percent-label">
+              <span>Ventilation Engineering Team</span>
+              <span class="pill high">ATTENTION</span>
+            </div>
+            <div class="stat-percent-num amber">
+              68.0<span class="stat-percent-unit">%</span>
+            </div>
+            <div class="stat-percent-desc">2 statutory sensor calibration delays flagged under CMR 2017 Rule 158.</div>
+            <div class="stat-percent-bar">
+              <div class="stat-percent-fill amber" style="width: 68%;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Statutory Rules Grid -->
+        <div class="panel" style="margin-top: 20px;">
+          <h3>Coal Mines Regulations (CMR) 2017 — Compliance Audit</h3>
+          <div class="sub">Statutory safety rules automatically checked every 24 hours</div>
+
+          <div class="rules-grid">
+            <div class="rule-box ok">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                <b style="color:var(--text-primary);">CMR Rule 153</b>
+                <span class="pill low">COMPLIANT</span>
+              </div>
+              <p style="margin:4px 0 0; color:var(--text-secondary); font-size:12px;">Daily ventilation duct measurements recorded and certified.</p>
+            </div>
+
+            <div class="rule-box overdue">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                <b style="color:var(--color-critical);">CMR Rule 158</b>
+                <span class="pill high">DELAYED</span>
+              </div>
+              <p style="margin:4px 0 0; color:var(--color-critical-text); font-size:12px;">Weekly multi-gas sensor calibration overdue by 6 hours.</p>
+            </div>
+
+            <div class="rule-box ok">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                <b style="color:var(--text-primary);">CMR Rule 129</b>
+                <span class="pill low">COMPLIANT</span>
+              </div>
+              <p style="margin:4px 0 0; color:var(--text-secondary); font-size:12px;">Underground emergency refuge chamber stocked and inspected.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =====================================================================
+           PAGE 11: STATUTORY REGULATORY REPORTS
+           ===================================================================== -->
+      <section id="reports" class="page">
+        <h2 class="section-title">Statutory Regulatory Reports</h2>
+        <div class="section-desc">Generate verified compliance dossiers and DGMS-ready audit summaries</div>
+
+        <div class="panel" style="max-width: 800px;">
+          <h3>Generate Official Compliance Dossier</h3>
+          <div class="sub">Select reporting period and regulatory format</div>
+
+          <div class="field">
+            <label for="reportType">Report Template</label>
+            <select id="reportType">
+              <option>Monthly Safety &amp; Hazard Governance Summary</option>
+              <option>Department SLA Performance &amp; Penalties Audit</option>
+              <option>Repeated Problems &amp; False Closure Forensic Dossier</option>
+            </select>
+          </div>
+
+          <button class="btn primary" type="button" onclick="generateReport()">Generate Certified Report</button>
+
+          <div id="reportOutput" class="report-output">
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border-subtle); padding-bottom:8px; margin-bottom:10px;">
+              <span class="tag" style="color:var(--color-safe);">REPORT CERTIFIED &amp; READY</span>
+              <span style="font-family:var(--font-mono); font-size:10.5px; color:var(--text-muted);">HASH: 0x9e81b2c4</span>
+            </div>
+            <h3 style="margin-top: 4px; font-size:16px;">Safety Summary &amp; Compliance Audit — August 2026</h3>
+            <ul style="color: var(--text-secondary); line-height: 1.8; font-size: 12.5px; padding-left: 20px; font-family: var(--font-mono);">
+              <li>Overall safety compliance score: <b style="color: var(--color-safe);">92.4%</b>.</li>
+              <li><b>Safety Inspection Team</b> achieved top compliance rating (91/100).</li>
+              <li><b>Ventilation Engineering Team</b> has 2 unresolved statutory SLA breaches.</li>
+              <li>4 repeated PPE non-compliance incidents flagged in Sector 2.</li>
+            </ul>
+            <button class="btn primary" type="button" style="margin-top: 12px;" onclick="toast('Certified PDF report downloaded [SHA256 Signed]')">
+              Download Certified PDF Report
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<!-- =====================================================================
+     MODAL 1: EVIDENCE / PHOTO UPLOAD & PREVIEW
+     ===================================================================== -->
+<div class="modal-overlay" id="evidenceUploadModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3 id="evidenceModalTitle">Upload Digital Photo Proof &amp; Evidence</h3>
+      <button class="modal-close" onclick="closeEvidenceUploadModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div id="evidenceUploadError" class="form-error-msg"></div>
+
+      <!-- File Dropzone -->
+      <div class="file-dropzone" id="evidenceDropzone" onclick="document.getElementById('evidenceFileInput').click()">
+        <div style="font-size:28px; margin-bottom:6px;">📁</div>
+        <strong style="color:var(--text-primary); font-size:13px;">Click to Browse or Drag Image Here</strong>
+        <div style="font-size:11px; color:var(--text-muted); margin-top:3px;">
+          Supported formats: JPG, JPEG, PNG, WEBP (Max 5 MB)
+        </div>
+        <input type="file" id="evidenceFileInput" accept="image/jpeg,image/png,image/webp,image/jpg" style="display:none;" onchange="handleEvidenceFileSelect(this)">
+      </div>
+
+      <!-- Live Image Preview Container -->
+      <div id="evidencePreviewWrapper" style="display:none;" class="image-preview-wrapper">
+        <img id="evidencePreviewImg" class="image-preview-thumb" src="" alt="Proof Preview">
+        <div style="flex:1; font-family:var(--font-mono); font-size:11.5px;">
+          <strong id="evidencePreviewName" style="color:var(--text-primary); word-break:break-all;">photo.jpg</strong>
+          <div id="evidencePreviewSize" style="color:var(--text-muted); margin-top:2px;">2.4 MB · image/jpeg</div>
+          <div style="display:flex; gap:8px; margin-top:8px;">
+            <button class="btn btn-sm" type="button" onclick="document.getElementById('evidenceFileInput').click()">Replace File</button>
+            <button class="btn btn-sm danger" type="button" onclick="clearEvidenceFileSelection()">Remove</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="evidenceUploaderInput">Inspector / Operator Name</label>
+        <input type="text" id="evidenceUploaderInput" value="Raj Kumar (Safety Officer · M-1024)">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" type="button" onclick="closeEvidenceUploadModal()">Cancel</button>
+      <button class="btn primary" id="btnSubmitEvidenceUpload" type="button" onclick="submitEvidenceUpload()">
+        Upload &amp; Attach to Case
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- =====================================================================
+     MODAL 2: CORRECTIVE ACTION CREATION
+     ===================================================================== -->
+<div class="modal-overlay" id="correctiveActionModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3>Create Statutory Corrective Action</h3>
+      <button class="modal-close" onclick="closeCorrectiveActionModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label for="caDescriptionInput">Remediation Action Plan</label>
+        <textarea id="caDescriptionInput" rows="3" placeholder="Describe the physical repair, fan tensioning, or hazard mitigation steps..."></textarea>
+      </div>
+      <div class="field">
+        <label for="caAssignedToInput">Assigned Lead / Technician</label>
+        <input type="text" id="caAssignedToInput" value="M-1024 (Raj Kumar · Safety Lead)">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" type="button" onclick="closeCorrectiveActionModal()">Cancel</button>
+      <button class="btn primary" type="button" onclick="submitNewCorrectiveAction()">Save &amp; Assign Action</button>
+    </div>
+  </div>
+</div>
+
+<!-- =====================================================================
+     MODAL 3: RE-INSPECTION TELEMETRY VERIFIER
+     ===================================================================== -->
+<div class="modal-overlay" id="reInspectionModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3>Conduct Post-Repair Re-Inspection</h3>
+      <button class="modal-close" onclick="closeReInspectionModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:12px; color:var(--text-secondary); margin:0 0 10px;">
+        Compare BEFORE hazard readings against post-remediation AFTER telemetry:
+      </p>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+        <div class="field">
+          <label>Airflow Velocity (m/s)</label>
+          <input type="text" id="reAirAfterInput" value="3.6 m/s">
+        </div>
+        <div class="field">
+          <label>Methane Level (% VOL)</label>
+          <input type="text" id="reCh4AfterInput" value="0.34%">
+        </div>
+      </div>
+      <div class="field">
+        <label for="reNotesInput">Re-Inspection Certification Notes</label>
+        <textarea id="reNotesInput" rows="3">Post-repair sensor verification passed. Ventilation duct restored to statutory compliant state.</textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" type="button" onclick="closeReInspectionModal()">Cancel</button>
+      <button class="btn primary" type="button" onclick="submitReInspection()">Certify Re-Inspection Passed</button>
+    </div>
+  </div>
+</div>
+
+<!-- Global Operational Toast -->
+<div id="toast" class="toast"></div>
+
+<!-- Core System Scripts (Zero Logic Regression) -->
+<script src="src/auth/authService.js"></script>
+<script src="src/geofence/geofenceEngine.js"></script>
+<script src="src/alerts/alertSystem.js"></script>
+<script src="src/risk/anomalyEngine.js"></script>
+<script src="src/risk/riskEngine.js"></script>
+<script src="src/services/caseService.js"></script>
+<script src="src/services/inspectionService.js"></script>
+<script src="src/services/evidenceService.js"></script>
+<script src="src/audit/auditService.js"></script>
+<script src="src/demo/p0Demo.js"></script>
+<script src="src/map/mineMap.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
